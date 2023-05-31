@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="pt">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Meus Bilhetes</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        height: 100vh;
+        margin: 0;
+      }
+
+      table {
+        border-collapse: collapse;
+        margin-top: 20px;
+      }
+
+      th,
+      td {
+        border: 1px solid black;
+        padding: 8px;
+        text-align: center;
+      }
+
+      th {
+        background-color: #f2f2f2;
+      }
+
+      .header {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .title {
+        margin-right: 10px;
+      }
+
+      button {
+        background-color: #4CAF50;
+        color: white;
+        padding: 10px 20px;
+        margin-top: 20px;
+        border: none;
+        cursor: pointer;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+      }
+
+      button:hover {
+        background-color: #45a049;
+      }
+    </style>
+  </head>
+  <body>
+  </div>
+
+  <!-- Adicione a mensagem de sucesso aqui -->
+  <% if (successMessage) { %>
+    <div class="alert alert-success">
+      <%= successMessage %>
+    </div>
+  <% } %>
+
+  <% if (tickets && tickets.length > 0) { %>
+    <table>
+      <thead>
+        <tr>
+          <th>Evento</th>
+          <th>Data</th>
+          <th>Local</th>
+          <th>Tipo de Bilhete</th> 
+          <th>Quantidade</th> <!-- Nova coluna -->
+        </tr>
+      </thead>
+      <tbody>
+        <% tickets.forEach((ticket) => { %>
+          <% if (ticket.eventId) { %>
+            <tr>
+              <td><%= ticket.eventId.name %></td>
+              <td><%= new Date(ticket.eventId.date).toLocaleDateString('pt-PT') %></td>
+              <td><%= ticket.eventId.location %></td>
+              <td><%= ticket.type.charAt(0).toUpperCase() + ticket.type.slice(1) %></td>
+              <td><%= ticket.count %></td> <!-- Nova coluna -->
+            </tr>
+          <% } %>
+        <% }); %>
+      </tbody>
+    </table>
+    
+  <% } else { %>
+    <p>Nenhum bilhete encontrado.</p>
+  <% } %>
+
+  <button onclick="location.href='/'">Página inicial</button>
+</body>
+</html>

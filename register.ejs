@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="pt">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Registo</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+        color: #333;
+      }
+
+      .container {
+        width: 100%;
+        max-width: 400px;
+        margin: 50px auto;
+        padding: 30px;
+        background-color: #fff;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
+
+      h1 {
+        text-align: center;
+        margin-bottom: 24px;
+      }
+
+      form {
+        display: flex;
+        flex-direction: column;
+      }
+
+      div {
+        margin-bottom: 12px;
+      }
+
+      label {
+        display: block;
+        margin-bottom: 4px;
+      }
+
+      input {
+        width: 100%;
+        padding: 8px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+      }
+
+      button {
+        background-color: #4CAF50;
+        color: white;
+        font-size: 16px;
+        padding: 12px 24px;
+        margin: 16px 0;
+        border: none;
+        cursor: pointer;
+        border-radius: 4px;
+        transition: background-color 0.3s;
+      }
+
+      button:hover {
+        background-color: #45a049;
+      }
+
+      a {
+        display: block;
+        text-align: center;
+        margin-top: 12px;
+      }
+    </style>
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Formulário de Registo</h1>
+    <form>
+      <div>
+        <label for="fname">Nome:</label>
+        <input type="text" name="fname" id="fname" required />
+      </div>
+      <div>
+        <label for="lname">Sobrenome:</label>
+        <input type="text" name="lname" id="lname" required />
+      </div>
+      <div>
+        <label for="Age">Idade:</label>
+        <input type="number" name="Age" id="Age" required />
+      </div>
+      <div>
+        <label for="email">E-mail:</label>
+        <input type="email" name="email" id="email" required />
+      </div>
+      <div>
+        <label for="password">Senha:</label>
+        <input type="password" name="password" id="password" required />
+      </div>
+      <div id="permission-field" style="display: none">
+        <label for="permission">Permissão:</label>
+        <select name="permission" id="permission">
+          <option value="0">Utilizador</option>
+          <option value="1">Admin</option>
+        </select>
+      </div>
+
+      <button type="submit">Registar</button>
+    </form>
+
+    <div
+      id="success-message"
+      style="display: none; color: green; margin-top: 20px"
+    >
+      Registo bem sucedido! Você será redirecionado para a página de login em
+      breve.
+    </div>
+    <div
+      id="error-message"
+      style="display: none; color: red; margin-top: 20px"
+    ></div>
+    <a href="/login">Login</a>
+
+    <script>
+      // Adicione o seguinte código antes do evento 'submit'
+      (async () => {
+        const token = document.cookie
+          .split("; ")
+          .find((row) => row.startsWith("auth_token="))
+          .split("=")[1];
+        const response = await fetch("/auth/verify-admin", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            "x-access-token": token,
+          },
+        });
+
+        if (response.ok) {
+          document.getElementById("permission-field").style.display = "block";
+        }
+      })();
+
+      document
+        .querySelector("form")
+        .addEventListener("submit", async (event) => {
+          event.preventDefault();
+
+          const formData = new FormData(event.target);
+          const data = Object.fromEntries(formData.entries());
+
+          const response = await fetch("/register", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(data),
+          });
+
+          const result = await response.json();
+
+          const successMessage = document.getElementById("success-message");
+          const errorMessage = document.getElementById("error-message");
+
+          if (result.success) {
+            successMessage.style.display = "block";
+            errorMessage.style.display = "none";
+            setTimeout(() => {
+              window.location.href = "/login";
+            }, 3000);
+          } else {
+            successMessage.style.display = "none";
+            errorMessage.textContent = result.message;
+            errorMessage.style.display = "block";
+          }
+        });
+    </script>
+  </body>
+</html>

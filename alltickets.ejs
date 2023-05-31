@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="pt">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Todos os Bilhetes</title>
+  </head>
+  <body>
+    <h1>Todos os Bilhetes</h1>
+    <% tickets.forEach((ticket) => { %>
+    <div>
+      <p>
+        Evento: <%= ticket.eventId.name %><br />
+        Data do evento: <%= ticket.eventId.date %><br />
+        Utilizador: <%= ticket.userId.email %><br />
+        Tipo: <%= ticket.type %><br />
+        Quantidade: <%= ticket.count %><br />
+      </p>
+      <form action="/admin/tickets/delete/<%= ticket._id %>" method="POST">
+        <input type="submit" value="Apagar" />
+      </form>
+      </form>
+    </div>
+    <% }) %>
+  </body>
+</html>

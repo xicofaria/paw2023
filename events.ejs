@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="pt">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Eventos</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: Arial, sans-serif;
+      }
+    
+      body {
+        background-color: #f4f4f4;
+        padding: 30px;
+      }
+    
+      h1 {
+        text-align: center;
+        margin-bottom: 24px;
+        color: #333;
+      }
+    
+      ul {
+        list-style-type: none;
+        padding: 0;
+      }
+    
+      li {
+        background-color: #fff;
+        padding: 20px;
+        margin-bottom: 20px;
+        border-radius: 5px;
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+      }
+    
+      h2 {
+        margin-bottom: 12px;
+      }
+    
+      p {
+        margin-bottom: 12px;
+      }
+    
+      a {
+        color: #4CAF50;
+        text-decoration: none;
+        margin-right: 10px;
+        transition: color 0.3s;
+      }
+    
+      a:hover {
+        color: #45a049;
+      }
+    
+      .btn {
+        font-size: 16px;
+        padding: 8px 16px;
+        margin: 16px 0;
+        border: none;
+        cursor: pointer;
+        border-radius: 4px;
+        transition: background-color 0.3s, color 0.3s;
+        display: inline-block;
+        text-align: center;
+        text-decoration: none;
+        color: white;
+        min-width: 250px; /* Defini uma largura mínima */
+      }
+    
+      .logout-btn {
+        background-color: #333;
+      }
+    
+      .logout-btn:hover {
+        background-color: #444;
+        color: #f1f1f1;
+      }
+    
+      .create-event-btn {
+        background-color: #007bff;
+      }
+    
+      .my-tickets-btn {
+        background-color: #007bff;
+      }
+    
+      .create-event-btn:hover, .my-tickets-btn:hover {
+        background-color: #0069d9;
+        color: #f1f1f1;
+      }
+    
+      .btn + .btn {
+        margin-left: 10px;
+      }
+    </style>
+    
+    
+  </head>
+  <body>
+    <h1>Eventos</h1>
+    <div style="display: flex; justify-content: space-between; margin-bottom: 20px;">
+      <a href="/add-event" class="btn create-event-btn">Criar Evento</a>
+      <a href="/tickets" class="btn my-tickets-btn">Meus Bilhetes</a>
+      <a href="/admin/users" class="btn logout-btn">Lista utilizadores</a>
+      <a href="/alltickets" class="btn logout-btn">Lista Bilhetes</a>
+      <a href="/logout" class="btn logout-btn">Logout</a>      
+    </div>
+    <ul>
+      <% if (success) { %>
+        <div class="alert alert-success">
+          <%= success %>
+        </div>
+      <% } %>
+      <% if (error) { %>
+        <div class="alert alert-danger">
+          <%= error %>
+        </div>
+      <% } %>
+      
+      <% events.forEach(event => { %>
+        <li>
+          <h2><%= event.name %></h2>
+          <p>Local: <%= event.location %></p>
+          <p>Data: <%= new Date(event.date).toLocaleDateString() %> </p>
+          <p>Horario: <%= event.time %></p>
+          <p>Preço: <%= event.price %>€ </p>
+          <p>Lugares disponíveis: <%= event.availableSeats %></p>
+          <% const eventDateTime = new Date(event.date); %>
+          <% eventDateTime.setHours(event.time.substr(0,2), event.time.substr(3,2)); %>
+          <% const timeRemaining = eventDateTime - new Date(); %>
+          <% const daysRemaining = Math.floor(timeRemaining / (1000 * 60 * 60 * 24)); %>
+          <p>Faltam <%= daysRemaining %> dias para o evento</p>
+          <a href="/tickets/purchase/<%= event._id %>">Comprar bilhete</a>
+          <br>
+          <a href="/event/<%= event._id %>/edit">Editar evento</a>
+          <br>
+          <a href="/event/<%= event._id %>/delete">Excluir evento</a>
+        </li>
+      <% }) %>
+    </ul>
+  </body>
+</html>

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Users</title>
+</head>
+<body>
+  <h1>Users</h1>
+  <table>
+    <tr>
+      <th>Name</th>
+      <th>Email</th>
+      <th>Age</th>
+      <th>Edit</th>
+      <th>Delete</th>
+    </tr>
+    <% users.forEach(function(user) { %>
+    <tr>
+      <td><%= user.fname %> <%= user.lname %></td>
+      <td><%= user.email %></td>
+      <td><%= user.Age %></td>
+      <td><a href="/admin/users/edit/<%= user._id %>">Edit</a></td>
+      <td><button class="delete-user-button" data-user-id="<%= user._id %>">Delete</button></td>
+    </tr>
+    <% }); %>
+  </table>
+  <h2>Admins</h2>
+  <table>
+    <tr>
+      <th>Name</th>
+      <th>Email</th>
+      <th>Age</th>
+      <th>Edit</th>
+      <th>Delete</th>
+    </tr>
+    <% admins.forEach(function(admin) { %>
+    <tr>
+      <td><%= admin.fname %> <%= admin.lname %></td>
+      <td><%= admin.email %></td>
+      <td><%= admin.Age %></td>
+      <td><a href="/admin//users/edit/<%= admin._id %>">Edit</a></td>
+      <td><button class="delete-user-button" data-user-id="<%= admin._id %>">Delete</button></td>
+    </tr>
+    <% }); %>
+  </table>
+
+<script>
+  // Evento de clique para todos os botões de exclusão de usuários
+  document.querySelectorAll('.delete-user-button').forEach(button => {
+    button.addEventListener('click', function (event) {
+      // Prevenir a ação padrão do botão (se houver)
+      event.preventDefault();
+
+      // Obter o ID do usuário a partir do atributo de dados do botão
+      const userId = this.dataset.userId;
+
+      // Enviar solicitação DELETE para o servidor
+      fetch(`/admin/users/${userId}`, {
+        method: 'DELETE',
+      })
+      .then(response => response.json())
+      .then(data => {
+        console.log('Success:', data);
+        // Remova a linha da tabela após a exclusão bem sucedida
+        this.closest('tr').remove();
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+      });
+    });
+  });
+</script>
+<br>
+<div class="back-link-container">
+    <a href="/events">Voltar para a lista de eventos</a>
+
+</body>
+</html>
